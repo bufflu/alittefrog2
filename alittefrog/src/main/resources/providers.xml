@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean class="com.lu.alittefrog.providers.ServiceProviders" init-method="init" destroy-method="close">
+        <constructor-arg name="port" value="9998"/>
+        <property name="registry" ref="registry"/>
+        <property name="exposeBeanMap">
+            <map>
+                <entry key="com.lu.service.SayService" value-ref="sayService"></entry>
+            </map>
+        </property>
+    </bean>
+    <bean class="com.lu.alittefrog.registry.ZookeeperRegistry" id="registry">
+        <constructor-arg name="serers" value="192.168.142.152:2181"/>
+    </bean>
+
+</beans>

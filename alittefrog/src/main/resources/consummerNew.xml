@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean class="com.lu.alittefrog.registry.ZookeeperRegistry" id="registry">
+        <constructor-arg name="serers" value="192.168.142.152:2181"/>
+    </bean>
+
+    <bean class="com.lu.alittefrog.common.ReferenceScanner" id="referenceScanner">
+        <property name="registryName" value="registry"/>
+        <property name="references">
+            <map>
+                <entry key="sayService" value="com.lu.service.SayService"/>
+            </map>
+        </property>
+        <!--负载均衡策略  random（默认）  roundRobin-->
+        <property name="loadBalance" value="roundRobin"/>
+    </bean>
+</beans>

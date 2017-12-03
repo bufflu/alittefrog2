@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--客户端-->
+    <bean class="com.lu.alittefrog.client.NettyRPCClient" id="client" init-method="init" destroy-method="close"></bean>
+    <bean class="com.lu.alittefrog.loadbalance.RandomLoadBalancer" id="loadBalancer"></bean>
+    <!--<bean class="com.lu.alittefrog.loadbalance.RoundRobinLoadBalancer" id="loadBalancer"/>轮询-->
+    <!--注册中心-->
+    <bean class="com.lu.alittefrog.registry.ZookeeperRegistry" id="registry">
+        <constructor-arg name="serers" value="192.168.142.152:2181"/>
+    </bean>
+    <!--构建Cluster-->
+    <bean class="com.lu.alittefrog.failover.FailFastCluster" id="cluster">
+        <constructor-arg name="rpcClient" ref="client"/>
+        <constructor-arg name="loadBalancer" ref="loadBalancer"/>
+    </bean>
+    <!--代理对象-->
+    <bean class="com.lu.alittefrog.proxy.DynamicProxy" id="sayService">
+        <constructor-arg name="cluster" ref="cluster"/>
+        <constructor-arg name="registry" ref="registry"/>
+        <constructor-arg name="targetInterface" value="com.lu.service.SayService"/>
+    </bean>
+</beans>
